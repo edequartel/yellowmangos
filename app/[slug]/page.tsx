@@ -9,22 +9,24 @@ export async function generateStaticParams(): Promise<SlugParams[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-// Metadata per page (typed)
+// Next 15 types: params is a Promise → await it
 export async function generateMetadata(
-  { params }: { params: SlugParams }
+  { params }: { params: Promise<SlugParams> }
 ): Promise<Metadata> {
-  const { meta } = await getPost(params.slug);
+  const { slug } = await params;
+  const { meta } = await getPost(slug);
   return {
     title: meta.title,
-    description: `Markdown: ${meta.title}`
+    description: `Markdown: ${meta.title}`,
   };
 }
 
-// Actual page (typed props)
+// Page component: params is a Promise → await it
 export default async function Page(
-  { params }: { params: SlugParams }
+  { params }: { params: Promise<SlugParams> }
 ) {
-  const { meta, html } = await getPost(params.slug);
+  const { slug } = await params;
+  const { meta, html } = await getPost(slug);
 
   return (
     <main>
