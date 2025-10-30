@@ -1,4 +1,4 @@
-import "./globals.css";
+// No globals.css import here; it's loaded in layout.tsx
 import Link from "next/link";
 import { listPosts } from "@/lib/md";
 
@@ -9,11 +9,12 @@ export default async function HomePage() {
   return (
     <main>
       <h1>Yellow Mangoes 🍋🥭</h1>
-      <p>Markdown files in /content appear here.</p>
+      <p>Drop <code>.md</code> files in <code>/content</code>. Each becomes a page.</p>
       <ul className="list-disc pl-6">
         {posts.map(p => (
           <li key={p.slug}>
-            <Link href={`/${p.slug}`}>{p.title}</Link>
+            <a href={`/${p.slug}`}>{p.title}</a>
+            {p.date && <span className="ml-2 text-sm opacity-70">({new Date(p.date).toLocaleDateString()})</span>}
           </li>
         ))}
       </ul>

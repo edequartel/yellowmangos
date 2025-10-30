@@ -5,4 +5,4 @@ date: 2025-10-30
 
 # Hello from Yellow Mangoes 🍋🥭
 
-This is a markdown page deployed via Vercel.
+This page was generated from **content/welcome.md**.

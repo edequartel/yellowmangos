@@ -19,7 +19,7 @@ export async function getPost(slug: string) {
   const raw = await fs.readFile(fullPath, "utf8");
   const { content, data } = matter(raw);
   const { value: html } = await remark().use(remarkGfm).use(remarkHtml).process(content);
-  const title = typeof data.title === "string" ? data.title.trim() : slug.replace(/[-_]/g, " ");
+  const title = typeof data.title === "string" && data.title.trim() ? data.title.trim() : slug.replace(/[-_]/g, " ");
   const date = typeof data.date === "string" ? new Date(data.date).toISOString() : undefined;
   return { meta: { title, date, slug }, html };
 }
@@ -27,5 +27,10 @@ export async function getPost(slug: string) {
 export async function listPosts() {
   const slugs = await listMarkdownSlugs();
   const posts = await Promise.all(slugs.map(s => getPost(s)));
-  return posts.map(p => p.meta).sort((a, b) => (a.date && b.date ? b.date.localeCompare(a.date) : a.title.localeCompare(b.title)));
+  return posts.map(p => p.meta).sort((a, b) => {
+    if (a.date && b.date) return b.date.localeCompare(a.date);
+    if (a.date) return -1;
+    if (b.date) return 1;
+    return a.title.localeCompare(b.title);
+  });
 }
