@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brain Bananas</title>
+  <meta name="description" content="Brain Bananas — experimentele chatapp die antwoorden geeft uit je eigen documenten." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Systeemlettertype-stapel; geen externe fonts nodig -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="page-header">
+      <h1 class="brand">Brain Bananas</h1>
+      <p class="tagline">App in ontwikkeling • iMessage-achtige chat met je documenten</p>
+    </header>
+
+   <section class="card">
+  <h2 class="section-title">Wat is Brain Bananas?</h2>
+  <p><b>Brain Bananas</b> is een experimentele app die je vragen met AI - ChatGPT - beantwoordt in een <b>chatstijl die lijkt op iMessage</b>. De app gebruikt online documenten om antwoorden te vinden. Staat het antwoord er niet in? Dan laat Brain Bananas dat eerlijk weten.</p>
+</section>
+
+    <section class="card">
+      <h2 class="section-title">Hoe het werkt</h2>
+      <ul class="list list--ticks">
+        <li>Je stelt een vraag in de chat.</li>
+        <li>De vraag wordt doorgestuurd naar <b>OpenAI</b>, waar een <b>ingestelde assistent</b> het antwoord zoekt.</li>
+        <li>De assistent mag alleen informatie gebruiken uit de <b>geüploade documenten</b> (tap rechtsboven op map):</li>
+      </ul>
+      <ul class="list list--docs" aria-label="Geüploade documenten">
+        <li><i>The Hitchhiker’s Guide to the Galaxy</i></li>
+        <li><i>Braille Curriculum</i></li>
+        <li><i>Braille Leesregel</i></li>
+      </ul>
+      <ul class="list list--tips">
+        <li>Antwoorden verschijnen als chatballonnen. Tik op een ballon om de volledige tekst te bekijken.</li>
+        <li>Vragen en antwoorden bevinden zich in een thread. Een nieuwe thread kun je starten door de oude te verwijderen (nog niet geïmplementeerd).</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Belangrijk om te weten</h2>
+      <ul class="list list--warning">
+        <li>De app is nog in <b>ontwikkeling</b>.</li>
+        <li>Het gesprek stopt als je naar een andere app schakelt.</li>
+        <li>Het verwerken van een vraag kan soms wat langer duren.</li>
+        <li>De app gebruikt <b>mijn OpenAI-account</b> → wees voorzichtig met gebruik, omdat dit <b>tokens kost</b>.</li>
+        <li>Voor de communicatie met OpenAI wordt een <b>serverless service</b> gebruikt, zodat de <b>API-key niet in de app</b> staat.</li>
+      </ul>
+    </section>
+
+    <footer class="page-footer">
+      <p>© <span id="year"></span> Brain Bananas</p>
+    </footer>
+  </main>
+
+  <script>
+    // kleine progressive enhancement: huidig jaar in de footer, edq
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
