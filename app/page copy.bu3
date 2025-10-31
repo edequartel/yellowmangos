@@ -5,10 +5,11 @@ import { listPosts, type PostMeta } from "@/lib/md";
 export const revalidate = 60;
 
 type TreeNode = {
-  files: PostMeta[];
-  children: Map<string, TreeNode>;
+  files: PostMeta[];                  // markdown files directly in this folder
+  children: Map<string, TreeNode>;    // subfolders
 };
 
+/** Build a nested tree from slugPath like "guides/setup" or "welcome" */
 function buildTree(posts: PostMeta[]): TreeNode {
   const root: TreeNode = { files: [], children: new Map() };
 
@@ -16,33 +17,28 @@ function buildTree(posts: PostMeta[]): TreeNode {
     const parts = p.slugPath.split("/").filter(Boolean);
     let node = root;
 
-    // walk/create folder nodes for all but the last segment
-    for (let i = 0; i < parts.length - 1; i++) {
+    // walk/create folder nodes for all but the last segment (file)
+    for (let i = 0; i < Math.max(parts.length - 1, 0); i++) {
       const seg = parts[i];
-      if (!node.children.has(seg))
-        node.children.set(seg, { files: [], children: new Map() });
+      if (!node.children.has(seg)) node.children.set(seg, { files: [], children: new Map() });
       node = node.children.get(seg)!;
     }
 
+    // file “lives” in the folder node
     node.files.push(p);
   }
 
   return root;
 }
 
+/** Title-case a folder label */
 function titleize(s: string) {
   return s.replace(/[-_]/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 }
 
-function RenderTree({
-  node,
-  path = "",
-  showHeader = true,
-}: {
-  node: TreeNode;
-  path?: string;
-  showHeader?: boolean;
-}) {
+/** Recursively render the tree. `path` is the accumulated URL path for nested folders. */
+function RenderTree({ node, path = "" }: { node: TreeNode; path?: string }) {
+  // Sort files by date desc then title asc (same as your listPosts)
   const files = [...node.files].sort((a, b) => {
     if (a.date && b.date) return b.date.localeCompare(a.date);
     if (a.date) return -1;
@@ -76,13 +72,8 @@ function RenderTree({
         const childPath = path ? `${path}/${folder}` : folder;
         return (
           <section key={childPath} className="mt-4">
-            {/* Always show a header for nested folders */}
-            {showHeader && (
-              <h2 className="text-2xl font-semibold mb-2">
-                {titleize(folder)}
-              </h2>
-            )}
-            <RenderTree node={child} path={childPath} showHeader={true} />
+            <h2 className="text-2xl font-semibold mb-2">{titleize(folder)}</h2>
+            <RenderTree node={child} path={childPath} />
           </section>
         );
       })}
@@ -94,28 +85,31 @@ export default async function HomePage() {
   const posts = await listPosts();
   const tree = buildTree(posts);
 
+  // files at the repository root (content/*.md without subfolder)
+  const hasRootFiles = tree.files.length > 0;
+
   return (
     <main>
       <h1>Yellow Mangoes 🍋🥭</h1>
       <p className="mb-6">
-        Place <code>.md</code> files anywhere under <code>/content</code>.
-        Subfolders appear as headers; top-level files are shown directly below.
+        Put <code>.md</code> anywhere under <code>/content</code>. Folders appear below as
+        headers; files are nested in a tree that mirrors the folder structure.
       </p>
 
-      {/* Root-level files (no "Root" header) */}
-      {tree.files.length > 0 && (
+      {hasRootFiles && (
         <section className="mb-8">
-          <RenderTree node={{ ...tree, children: new Map() }} showHeader={false} />
+          <h2 className="text-2xl font-semibold mb-2">Root</h2>
+          <RenderTree node={{ ...tree, children: new Map() }} />
         </section>
       )}
 
-      {/* Top-level folders, each with its own header */}
+      {/* Render top-level folders (hide root files from this listing by passing only children) */}
       {[...tree.children.entries()]
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([folder, child]) => (
           <section key={folder} className="mb-8">
             <h2 className="text-2xl font-semibold mb-2">{titleize(folder)}</h2>
-            <RenderTree node={child} path={folder} showHeader={true} />
+            <RenderTree node={child} path={folder} />
           </section>
         ))}
     </main>
