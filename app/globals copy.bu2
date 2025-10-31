@@ -89,7 +89,3 @@ td {
 th {
   @apply bg-zinc-100 dark:bg-zinc-900 font-semibold;
 }
-
-h3, h4, h5, h6 {
-  @apply ml-4;
-}
