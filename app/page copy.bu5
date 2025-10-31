@@ -9,9 +9,10 @@ type TreeNode = {
   children: Map<string, TreeNode>;
 };
 
-/** Bouw boomstructuur */
+/** Build a nested folder/file tree from all posts */
 function buildTree(posts: PostMeta[]): TreeNode {
   const root: TreeNode = { files: [], children: new Map() };
+
   for (const p of posts) {
     const parts = p.slugPath.split("/").filter(Boolean);
     let node = root;
@@ -26,22 +27,22 @@ function buildTree(posts: PostMeta[]): TreeNode {
   return root;
 }
 
-/** Maak titel netjes */
+/** Make folder names human-friendly */
 function titleize(s: string) {
   return s.replace(/[-_]/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 }
 
-/** Recursieve renderfunctie met nummering */
+/** Render folders and files recursively.
+ *  `depth` controls header level (2 = h2, 3 = h3, …)
+ */
 function RenderTree({
   node,
   path = "",
   depth = 2,
-  numbering = "",
 }: {
   node: TreeNode;
   path?: string;
   depth?: number;
-  numbering?: string; // bijvoorbeeld "1.2."
 }) {
   const files = [...node.files].sort((a, b) => {
     if (a.date && b.date) return b.date.localeCompare(a.date);
@@ -60,7 +61,7 @@ function RenderTree({
     <div className="space-y-6">
       {files.length > 0 && (
         <ul className="list-disc pl-6">
-          {files.map((p, i) => (
+          {files.map((p) => (
             <li key={p.slugPath}>
               <Link href={`/${p.slugPath}`}>{p.title}</Link>
               {p.date && (
@@ -73,25 +74,14 @@ function RenderTree({
         </ul>
       )}
 
-      {children.map(([folder, child], index) => {
+      {children.map(([folder, child]) => {
         const childPath = path ? `${path}/${folder}` : folder;
-        const currentNumber = numbering
-          ? `${numbering}${index + 1}.`
-          : `${index + 1}.`;
-        const Heading = (
-          <HeadingTag className="font-semibold mb-2">
-            {currentNumber} {titleize(folder)}
-          </HeadingTag>
-        );
         return (
           <section key={childPath} className="mt-4">
-            {Heading}
-            <RenderTree
-              node={child}
-              path={childPath}
-              depth={depth + 1}
-              numbering={currentNumber}
-            />
+            <HeadingTag className="font-semibold mb-2">
+              {titleize(folder)}
+            </HeadingTag>
+            <RenderTree node={child} path={childPath} depth={depth + 1} />
           </section>
         );
       })}
@@ -107,29 +97,20 @@ export default async function HomePage() {
     <main>
       <h1>Yellow Mangoes 🍋🥭</h1>
       <p className="mb-6">
-        Alle <code>.md</code>-bestanden onder <code>/content</code> worden hieronder
-        getoond met genummerde koppen per mapniveau.
+        All <code>.md</code> files under <code>/content</code> appear below.
+        Nested folders use decreasing header sizes to show structure.
       </p>
 
-      {/* Root-bestanden (zonder header) */}
-      {tree.files.length > 0 && (
-        <RenderTree node={{ ...tree, children: new Map() }} depth={2} numbering="" />
-      )}
+      {/* Root-level files (no folder header) */}
+      {tree.files.length > 0 && <RenderTree node={{ ...tree, children: new Map() }} depth={2} />}
 
-      {/* Top-level mappen */}
+      {/* Top-level folders */}
       {[...tree.children.entries()]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([folder, child], index) => (
+        .map(([folder, child]) => (
           <section key={folder} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-2">
-              {index + 1}. {titleize(folder)}
-            </h2>
-            <RenderTree
-              node={child}
-              path={folder}
-              depth={3}
-              numbering={`${index + 1}.`}
-            />
+            <h2 className="text-2xl font-semibold mb-2">{titleize(folder)}</h2>
+            <RenderTree node={child} path={folder} depth={3} />
           </section>
         ))}
     </main>
