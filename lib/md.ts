@@ -42,8 +42,12 @@ export async function getPost(slug: string | string[]): Promise<{
   const slugPath = Array.isArray(slug) ? slug.join("/") : slug;
   const fullPath = path.join(CONTENT_DIR, slugPath + ".md");
   const raw = await fs.readFile(fullPath, "utf8");
+
   const { content, data } = matter(raw);
-  const { value: html } = await remark().use(remarkGfm).use(remarkHtml).process(content);
+
+  // IMPORTANT: remark().process(...) returns a VFile; coerce to string safely
+  const file = await remark().use(remarkGfm).use(remarkHtml).process(content);
+  const html = String(file); // handles string | Uint8Array
 
   const fileBaseName = slugPath.split("/").pop()!;
   const title =
