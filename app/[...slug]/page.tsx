@@ -23,11 +23,12 @@ export default async function Page(
   const { meta, html } = await getPost(slug);
   return (
     <main>
-      <h1>{meta.title}</h1>
+//      <h1>{meta.title}</h1>
+      <p><a href="/">← Back to all files</a></p>
       {meta.date && <p className="opacity-70 text-sm">{new Date(meta.date).toLocaleString()}</p>}
       <article dangerouslySetInnerHTML={{ __html: html }} />
       <hr />
-      <p><a href="/">← Back to all files</a></p>
+
     </main>
   );
 }
