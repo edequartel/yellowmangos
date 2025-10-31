@@ -1,40 +1,30 @@
-// app/[...slug]/page.tsx
 import type { Metadata } from "next";
 import { getPost, listMarkdownPaths } from "@/lib/md";
 
 type CatchAll = { slug: string[] };
 
-// Pre-generate every nested path (e.g. ["guides","setup"])
 export async function generateStaticParams(): Promise<CatchAll[]> {
   const paths = await listMarkdownPaths();
-  return paths.map((p) => ({ slug: p.split("/") }));
+  return paths.map((p) => ({ slug: p.split("/") })); // arrays for catch-all
 }
 
 export async function generateMetadata(
-  { params }: { params: Promise<CatchAll> } // Next 15: params is a Promise
+  { params }: { params: Promise<CatchAll> }
 ): Promise<Metadata> {
   const { slug } = await params;
   const { meta } = await getPost(slug);
-  return {
-    title: meta.title,
-    description: `Markdown: ${meta.title}`,
-  };
+  return { title: meta.title, description: `Markdown: ${meta.title}` };
 }
 
 export default async function Page(
-  { params }: { params: Promise<CatchAll> } // Next 15: params is a Promise
+  { params }: { params: Promise<CatchAll> }
 ) {
   const { slug } = await params;
   const { meta, html } = await getPost(slug);
-
   return (
     <main>
       <h1>{meta.title}</h1>
-      {meta.date && (
-        <p className="opacity-70 text-sm">
-          {new Date(meta.date).toLocaleString()}
-        </p>
-      )}
+      {meta.date && <p className="opacity-70 text-sm">{new Date(meta.date).toLocaleString()}</p>}
       <article dangerouslySetInnerHTML={{ __html: html }} />
       <hr />
       <p><a href="/">← Back to all files</a></p>
