@@ -1,17 +1,17 @@
-// app/[...slug]/page.tsx
 import type { Metadata } from "next";
-import { getPost, listMarkdownPaths } from "@/lib/md";
+import { getPost, listMarkdownSlugs } from "@/lib/md";
 
-type CatchAll = { slug: string[] };
+type SlugParams = { slug: string };
 
-// Pre-generate every nested path (e.g. ["guides","setup"])
-export async function generateStaticParams(): Promise<CatchAll[]> {
-  const paths = await listMarkdownPaths();
-  return paths.map((p) => ({ slug: p.split("/") }));
+// Pre-generate all slugs at build time
+export async function generateStaticParams(): Promise<SlugParams[]> {
+  const slugs = await listMarkdownSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
+// Next 15 types: params is a Promise → await it
 export async function generateMetadata(
-  { params }: { params: Promise<CatchAll> } // Next 15: params is a Promise
+  { params }: { params: Promise<SlugParams> }
 ): Promise<Metadata> {
   const { slug } = await params;
   const { meta } = await getPost(slug);
@@ -21,8 +21,9 @@ export async function generateMetadata(
   };
 }
 
+// Page component: params is a Promise → await it
 export default async function Page(
-  { params }: { params: Promise<CatchAll> } // Next 15: params is a Promise
+  { params }: { params: Promise<SlugParams> }
 ) {
   const { slug } = await params;
   const { meta, html } = await getPost(slug);
