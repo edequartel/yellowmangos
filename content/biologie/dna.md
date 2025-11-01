@@ -8,3 +8,5 @@ date: 2025-10-30
 This page was generated from **content/welcome.md**.
 
 * [document](t1.docx)
+
+![picture](pci.jpg)
