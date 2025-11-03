@@ -8,6 +8,7 @@ Hieronder vind je een korte uitleg en een praktische checklist.
 🌟 Uitleg Directe Instructie Model
 
 Het model bestaat meestal uit 6 fasen:
+
 	1.	Terugblik – korte herhaling van vorige les.
 	2.	Oriëntatie – uitleg van het doel van de les en het belang.
 	3.	Uitleg en instructie – de leraar legt uit, denkt hardop en doet voor.
@@ -22,32 +23,38 @@ Het model bestaat meestal uit 6 fasen:
 Checklist Directe Instructie Model
 
 1. Terugblik
+
 	•	Herhaal kort de vorige les.
 	•	Vraag of de leerlingen het nog weten.
 	•	Koppel aan de nieuwe les.
 
 2. Oriëntatie
+
 	•	Benoem het lesdoel in begrijpelijke taal.
 	•	Vertel waarom het belangrijk is.
 	•	Geef voorbeelden uit de praktijk.
 
 3. Uitleg en Instructie
+
 	•	Leg stap voor stap uit wat leerlingen moeten doen.
 	•	Doe een voorbeeld voor (modeling).
 	•	Gebruik visuele of tastbare ondersteuning.
 	•	Controleer of iedereen het begrijpt (check for understanding).
 
 4. Begeleide Inoefening
+
 	•	Oefen samen met de klas.
 	•	Geef directe feedback.
 	•	Laat leerlingen hardop denken of uitleggen.
 
 5. Zelfstandige Verwerking
+
 	•	Laat leerlingen zelf aan de slag gaan.
 	•	Observeer en bied hulp waar nodig.
 	•	Stimuleer samenwerking of differentiatie.
 
 6. Evaluatie en Afsluiting
+
 	•	Bespreek wat goed ging en wat nog moeilijk is.
 	•	Herhaal het lesdoel.
 	•	Geef een korte vooruitblik op de volgende les.
